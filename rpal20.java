@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 
 import rpal.AST;
 import rpal.CSEMachine;
-import rpal.ParseException;
+
 import rpal.Parser;
 import rpal.LexicalAnalyzer;
 
@@ -52,13 +52,13 @@ public class rpal20 {
     
     if(listFlag){
       if(fileName.isEmpty())
-        throw new ParseException("Please specify a file. Call P2 with -help to see examples");
+        throw new RuntimeException("Please specify a file. Call P2 with -help to see examples");
       printInputListing(fileName);
     }
     
     if(astFlag){
       if(fileName.isEmpty())
-        throw new ParseException("Please specify a file. Call P2 with -help to see examples");
+        throw new RuntimeException("Please specify a file. Call P2 with -help to see examples");
       ast = buildAST(fileName, true);
       printAST(ast);
       if(noOutFlag)
@@ -69,7 +69,7 @@ public class rpal20 {
     
     if(stFlag){
       if(fileName.isEmpty())
-        throw new ParseException("Please specify a file. Call P2 with -help to see examples");
+        throw new RuntimeException("Please specify a file. Call P2 with -help to see examples");
       ast = buildAST(fileName, true);
       ast.standardize();
       printAST(ast);
@@ -81,7 +81,7 @@ public class rpal20 {
     //-noout without -ast or -st produces no output
     if(noOutFlag && (!astFlag || !stFlag)){
       if(fileName.isEmpty())
-        throw new ParseException("Please specify a file. Call P2 with -help to see examples");
+        throw new RuntimeException("Please specify a file. Call P2 with -help to see examples");
     }
    
   }
@@ -101,9 +101,9 @@ public class rpal20 {
         System.out.println(s);
       }
     }catch(FileNotFoundException e){
-      throw new ParseException("File "+fileName+" not found.");
+      throw new RuntimeException("File "+fileName+" not found.");
     }catch(IOException e){
-      throw new ParseException("Error reading from file "+fileName);
+      throw new RuntimeException("Error reading from file "+fileName);
     }finally{
       try{
         if(buffer!=null) buffer.close();
@@ -119,7 +119,7 @@ public class rpal20 {
       Parser parser = new Parser(scanner);
       ast = parser.buildAST();
     }catch(IOException e){
-      throw new ParseException("ERROR: Could not read from file: " + fileName);
+      throw new RuntimeException("ERROR: Could not read from file: " + fileName);
     }
     return ast;
   }

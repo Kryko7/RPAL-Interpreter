@@ -27,7 +27,7 @@ public class Parser{
     eat();
     E(); 
     if(currentToken!=null)
-      throw new ParseException("Expected EOF.");
+      throw new RuntimeException("Expected EOF.");
   }
 
   private void eat(){
@@ -148,7 +148,7 @@ public class Parser{
       eat();
       D();
       if(!isCurrentToken(TokenType.RESERVED, "in"))
-        throw new ParseException("E:  'in' expected");
+        throw new RuntimeException("E:  'in' expected");
       eat();
       E(); 
       buildNAryASTNode(ASTNodeType.LET, 2);
@@ -163,10 +163,10 @@ public class Parser{
       }
       
       if(treesToPop==0)
-        throw new ParseException("E: at least one 'Vb' expected");
+        throw new RuntimeException("E: at least one 'Vb' expected");
       
       if(!isCurrentToken(TokenType.OPERATOR, "."))
-        throw new ParseException("E: '.' expected");
+        throw new RuntimeException("E: '.' expected");
       
       eat();
       E(); 
@@ -242,7 +242,7 @@ public class Parser{
       eat();
       TC(); 
       if(!isCurrentToken(TokenType.OPERATOR, "|"))
-        throw new ParseException("TC: '|' expected");
+        throw new RuntimeException("TC: '|' expected");
       eat();
       TC();  
       buildNAryASTNode(ASTNodeType.CONDITIONAL, 3);
@@ -443,7 +443,7 @@ public class Parser{
     while(isCurrentToken(TokenType.OPERATOR, "@")){ //Ap -> Ap '@' '<IDENTIFIER>' R => '@'
       eat();
       if(!isCurrentTokenType(TokenType.IDENTIFIER))
-        throw new ParseException("AP: expected Identifier");
+        throw new RuntimeException("AP: expected Identifier");
       eat();
       R(); //extra readNT in procR()
       buildNAryASTNode(ASTNodeType.AT, 3);
@@ -512,7 +512,7 @@ public class Parser{
       eat();
       E(); //extra readNT in procE()
       if(!isCurrentTokenType(TokenType.R_PAREN))
-        throw new ParseException("RN: ')' expected");
+        throw new RuntimeException("RN: ')' expected");
     }
     else if(isCurrentToken(TokenType.RESERVED, "dummy")){ //R -> 'dummy' => 'dummy'
       createTerminalASTNode(ASTNodeType.DUMMY, "dummy");
@@ -584,7 +584,7 @@ public class Parser{
       D();
       eat();
       if(!isCurrentTokenType(TokenType.R_PAREN))
-        throw new ParseException("DB: ')' expected");
+        throw new RuntimeException("DB: ')' expected");
       eat();
     }
     else if(isCurrentTokenType(TokenType.IDENTIFIER)){
@@ -597,7 +597,7 @@ public class Parser{
         //Hence, we must pop the top of the tree VL just made and put it under a
         //comma node with the identifier it missed.
         if(!isCurrentToken(TokenType.OPERATOR, "="))
-          throw new ParseException("DB: = expected.");
+          throw new RuntimeException("DB: = expected.");
         buildNAryASTNode(ASTNodeType.COMMA, 2);
         eat();
         E(); //extra readNT in procE()
@@ -618,10 +618,10 @@ public class Parser{
           }
 
           if(treesToPop==0)
-            throw new ParseException("E: at least one 'Vb' expected");
+            throw new RuntimeException("E: at least one 'Vb' expected");
 
           if(!isCurrentToken(TokenType.OPERATOR, "="))
-            throw new ParseException("DB: = expected.");
+            throw new RuntimeException("DB: = expected.");
 
           eat();
           E(); //extra readNT in procE()
@@ -656,7 +656,7 @@ public class Parser{
       else{ //Vb -> '(' Vl ')'
         VL(); //extra readNT in procVB()
         if(!isCurrentTokenType(TokenType.R_PAREN))
-          throw new ParseException("VB: ')' expected");
+          throw new RuntimeException("VB: ')' expected");
         eat();
       }
     }
@@ -669,14 +669,14 @@ public class Parser{
    */
   private void VL(){
     if(!isCurrentTokenType(TokenType.IDENTIFIER))
-      throw new ParseException("VL: Identifier expected");
+      throw new RuntimeException("VL: Identifier expected");
     else{
       eat();
       int treesToPop = 0;
       while(isCurrentToken(TokenType.OPERATOR, ",")){ //Vl -> '<IDENTIFIER>' list ',' => ','?;
         eat();
         if(!isCurrentTokenType(TokenType.IDENTIFIER))
-          throw new ParseException("VL: Identifier expected");
+          throw new RuntimeException("VL: Identifier expected");
         eat();
         treesToPop++;
       }

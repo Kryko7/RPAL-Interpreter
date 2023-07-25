@@ -75,7 +75,7 @@ public class AST{
         //  X     E           X      P
         ASTNode equalNode = node.getChild();
         if(equalNode.getType()!=ASTNodeType.EQUAL)
-          throw new StandardizingException("LET/WHERE: left child is not EQUAL"); //safety
+          throw new RuntimeException("LET/WHERE: left child is not EQUAL"); //safety
         ASTNode e = equalNode.getChild().getSibling();
         equalNode.getChild().setSibling(equalNode.getSibling());
         equalNode.setSibling(e);
@@ -141,7 +141,7 @@ public class AST{
         //                                      /    \
         //                                     X1    E2
         if(node.getChild().getType()!=ASTNodeType.EQUAL || node.getChild().getSibling().getType()!=ASTNodeType.EQUAL)
-          throw new StandardizingException("WITHIN: one of the children is not EQUAL"); //safety
+          throw new RuntimeException("WITHIN: one of the children is not EQUAL"); //safety
         ASTNode x1 = node.getChild().getChild();
         e1 = x1.getSibling();
         ASTNode x2 = node.getChild().getSibling().getChild();
@@ -193,7 +193,7 @@ public class AST{
         
         childNode = node.getChild();
         if(childNode.getType()!=ASTNodeType.EQUAL)
-          throw new StandardizingException("REC: child is not EQUAL"); //safety
+          throw new RuntimeException("REC: child is not EQUAL"); //safety
         ASTNode x = childNode.getChild();
         lambdaNode = new ASTNode();
         lambdaNode.setType(ASTNodeType.LAMBDA);
@@ -220,37 +220,14 @@ public class AST{
         node.getChild().setSibling(constructLambdaChain(childSibling));
         break;
       default:
-        // Node types we do NOT standardize:
-        // CSE Optimization Rule 6 (binops)
-        // OR
-        // AND
-        // PLUS
-        // MINUS
-        // MULT
-        // DIV
-        // EXP
-        // GR
-        // GE
-        // LS
-        // LE
-        // EQ
-        // NE
-        // CSE Optimization Rule 7 (unops)
-        // NOT
-        // NEG
-        // CSE Optimization Rule 8 (conditionals)
-        // CONDITIONAL
-        // CSE Optimization Rule 9, 10 (tuples)
-        // TAU
-        // CSE Optimization Rule 11 (n-ary functions)
-        // COMMA
+        
         break;
     }
   }
 
   private void populateCommaAndTauNode(ASTNode equalNode, ASTNode commaNode, ASTNode tauNode){
     if(equalNode.getType()!=ASTNodeType.EQUAL)
-      throw new StandardizingException("SIMULTDEF: one of the children is not EQUAL"); //safety
+      throw new RuntimeException("SIMULTDEF: one of the children is not EQUAL"); //safety
     ASTNode x = equalNode.getChild();
     ASTNode e = x.getSibling();
     setChild(commaNode, x);
@@ -512,11 +489,3 @@ enum ASTNodeType{
   }
 }
 
-class StandardizingException extends RuntimeException{
-  private static final long serialVersionUID = 1L;
-  
-  public StandardizingException(String message){
-    super(message);
-  }
-
-}

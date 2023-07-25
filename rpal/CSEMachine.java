@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-
+/*
+ * This class implements a CSE machine.
+ */
 
 public class CSEMachine{
 

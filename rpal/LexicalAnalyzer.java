@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
+/*
+ * This class is responsible for reading the input file and breaking it down into tokens.
+ */
 
 public class LexicalAnalyzer{
   
