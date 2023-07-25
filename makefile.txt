@@ -1,0 +1,34 @@
+# Java compiler
+JAVAC = javac
+
+# Java compiler flags
+JFLAGS = -d bin -sourcepath src
+
+# Main class
+MAIN_CLASS = Main
+
+# Source files directory
+SRC_DIR = src/com/rpalinterpreter
+
+# Output directory for compiled classes
+BIN_DIR = bin
+
+# Create the bin directory if it doesn't exist
+$(shell mkdir -p $(BIN_DIR))
+
+# List of Java source files
+SOURCES = $(wildcard $(SRC_DIR)/**/*.java)
+
+# List of compiled class files
+CLASSES = $(patsubst $(SRC_DIR)/%.java,$(BIN_DIR)/%.class,$(SOURCES))
+
+# Default target
+all: $(CLASSES)
+
+# Compile Java source files into class files
+$(BIN_DIR)/%.class: $(SRC_DIR)/%.java
+	$(JAVAC) $(JFLAGS) $<
+
+# Clean compiled class files
+clean:
+	rm -rf $(BIN_DIR)/*.class
