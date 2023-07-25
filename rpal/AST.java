@@ -5,10 +5,11 @@ import java.util.Stack;
 
 
 
-/*
- * Abstract Syntax Tree: The nodes use a first-child
- * next-sibling representation.
+/**
+ * This class represents a node in the Abstract Syntax Tree (AST).
+ * Each node in the AST can have multiple children and a parent.
  */
+
 public class AST{
   private ASTNode root;
   private ArrayDeque<PendingDeltaBody> pendingDeltaBodyQueue;
@@ -18,13 +19,11 @@ public class AST{
   private int deltaIndex;
 
   public AST(ASTNode node){
-    this.root = node;
+    this.root = node;   
   }
 
-  /**
-   * Prints the tree nodes in pre-order fashion.
-   */
-  public void print(){
+  
+  public void printAST(){
     preOrderPrint(root,"");
   }
 
@@ -48,18 +47,13 @@ public class AST{
       System.out.println(printPrefix+node.getType().getPrintName());
   }
 
-  /**
-   * Standardize this tree
-   */
+  
   public void standardize(){
     standardize(root);
     standardized = true;
   }
 
-  /**
-   * Standardize the tree bottom-up
-   * @param node node to standardize
-   */
+  
   private void standardize(ASTNode node){
     //standardize the children first
     if(node.getChild()!=null){
@@ -72,6 +66,7 @@ public class AST{
 
     //all children standardized. now standardize this node
     switch(node.getType()){
+      
       case LET:
         //       LET              GAMMA
         //     /     \           /     \
@@ -80,13 +75,15 @@ public class AST{
         //  X     E           X      P
         ASTNode equalNode = node.getChild();
         if(equalNode.getType()!=ASTNodeType.EQUAL)
-          throw new StandardizeException("LET/WHERE: left child is not EQUAL"); //safety
+          throw new StandardizingException("LET/WHERE: left child is not EQUAL"); //safety
         ASTNode e = equalNode.getChild().getSibling();
         equalNode.getChild().setSibling(equalNode.getSibling());
         equalNode.setSibling(e);
         equalNode.setType(ASTNodeType.LAMBDA);
         node.setType(ASTNodeType.GAMMA);
         break;
+      
+      
       case WHERE:
         //make this is a LET node and standardize that
         //       WHERE               LET
@@ -101,6 +98,8 @@ public class AST{
         node.setType(ASTNodeType.LET);
         standardize(node);
         break;
+      
+      
       case FCNFORM:
         //       FCN_FORM                EQUAL
         //       /   |   \              /    \
@@ -111,6 +110,8 @@ public class AST{
         node.getChild().setSibling(constructLambdaChain(childSibling));
         node.setType(ASTNodeType.EQUAL);
         break;
+      
+      
       case AT:
         //         AT              GAMMA
         //       / | \    ->       /    \
@@ -129,6 +130,8 @@ public class AST{
         node.setChild(gammaNode);
         node.setType(ASTNodeType.GAMMA);
         break;
+      
+      
       case WITHIN:
         //           WITHIN                  EQUAL
         //          /      \                /     \
@@ -138,7 +141,7 @@ public class AST{
         //                                      /    \
         //                                     X1    E2
         if(node.getChild().getType()!=ASTNodeType.EQUAL || node.getChild().getSibling().getType()!=ASTNodeType.EQUAL)
-          throw new StandardizeException("WITHIN: one of the children is not EQUAL"); //safety
+          throw new StandardizingException("WITHIN: one of the children is not EQUAL"); //safety
         ASTNode x1 = node.getChild().getChild();
         e1 = x1.getSibling();
         ASTNode x2 = node.getChild().getSibling().getChild();
@@ -155,6 +158,8 @@ public class AST{
         node.setChild(x2);
         node.setType(ASTNodeType.EQUAL);
         break;
+      
+      
       case SIMULTDEF:
         //         SIMULTDEF            EQUAL
         //             |               /     \
@@ -174,6 +179,8 @@ public class AST{
         node.setChild(commaNode);
         node.setType(ASTNodeType.EQUAL);
         break;
+      
+      
       case REC:
         //        REC                 EQUAL
         //         |                 /     \
@@ -182,9 +189,11 @@ public class AST{
         //     X       E                YSTAR  LAMBDA
         //                                     /     \
         //                                    X       E
+        
+        
         childNode = node.getChild();
         if(childNode.getType()!=ASTNodeType.EQUAL)
-          throw new StandardizeException("REC: child is not EQUAL"); //safety
+          throw new StandardizingException("REC: child is not EQUAL"); //safety
         ASTNode x = childNode.getChild();
         lambdaNode = new ASTNode();
         lambdaNode.setType(ASTNodeType.LAMBDA);
@@ -241,7 +250,7 @@ public class AST{
 
   private void populateCommaAndTauNode(ASTNode equalNode, ASTNode commaNode, ASTNode tauNode){
     if(equalNode.getType()!=ASTNodeType.EQUAL)
-      throw new StandardizeException("SIMULTDEF: one of the children is not EQUAL"); //safety
+      throw new StandardizingException("SIMULTDEF: one of the children is not EQUAL"); //safety
     ASTNode x = equalNode.getChild();
     ASTNode e = x.getSibling();
     setChild(commaNode, x);
@@ -278,10 +287,7 @@ public class AST{
     return lambdaNode;
   }
 
-  /**
-   * Creates delta structures from the standardized tree
-   * @return the first delta structure (&delta;0)
-   */
+  
   public Delta createDeltas(){
     pendingDeltaBodyQueue = new ArrayDeque<PendingDeltaBody>();
     deltaIndex = 0;
@@ -338,7 +344,7 @@ public class AST{
       ASTNode thenNode = conditionNode.getSibling();
       ASTNode elseNode = thenNode.getSibling();
       
-      //Add a Beta node.
+      
       Beta betaNode = new Beta();
       
       buildDeltaBody(thenNode, betaNode.getThenBody());
@@ -506,10 +512,10 @@ enum ASTNodeType{
   }
 }
 
-class StandardizeException extends RuntimeException{
+class StandardizingException extends RuntimeException{
   private static final long serialVersionUID = 1L;
   
-  public StandardizeException(String message){
+  public StandardizingException(String message){
     super(message);
   }
 

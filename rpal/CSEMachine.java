@@ -14,6 +14,7 @@ public class CSEMachine{
   private Delta rootDelta;
 
   public CSEMachine(AST ast){
+
     if(!ast.isStandardized())
       throw new RuntimeException("AST has NOT been standardized!"); //should never happen
     rootDelta = ast.createDeltas();
@@ -24,6 +25,7 @@ public class CSEMachine{
   public void evaluateProgram(){
     processControlStack(rootDelta, rootDelta.getLinkedEnv());
   }
+  
 
   private void processControlStack(Delta currentDelta, Environment currentEnv){
     //create a new control stack and add all of the delta's body to it so that the delta's body isn't
@@ -69,6 +71,8 @@ public class CSEMachine{
       }
     }
   }
+
+
 
   // RULE 6
   private boolean applyBinaryOperation(ASTNode rator){
@@ -801,12 +805,18 @@ class EvaluationError{
 
 }
 
+/**
+ * The CopyNode class is responsible for copying AST nodes and their children.
+ * It provides methods to copy specific types of AST nodes.
+ */
+
 class NodeCopier{
   
   public ASTNode copy(ASTNode astNode){
     ASTNode copy = new ASTNode();
-    if(astNode.getChild()!=null)
+    if(astNode.getChild()!=null) {
       copy.setChild(astNode.getChild().accept(this));
+    }
     if(astNode.getSibling()!=null)
       copy.setSibling(astNode.getSibling().accept(this));
     copy.setType(astNode.getType());
@@ -817,10 +827,12 @@ class NodeCopier{
   
   public Beta copy(Beta beta){
     Beta copy = new Beta();
-    if(beta.getChild()!=null)
+    if(beta.getChild()!=null) {
       copy.setChild(beta.getChild().accept(this));
-    if(beta.getSibling()!=null)
+    }
+    if(beta.getSibling()!=null) {
       copy.setSibling(beta.getSibling().accept(this));
+    }
     copy.setType(beta.getType());
     copy.setValue(beta.getValue());
     copy.setSourceLineNumber(beta.getSourceLineNumber());
@@ -842,10 +854,12 @@ class NodeCopier{
   
   public Eta copy(Eta eta){
     Eta copy = new Eta();
-    if(eta.getChild()!=null)
+    if(eta.getChild()!=null) {
       copy.setChild(eta.getChild().accept(this));
-    if(eta.getSibling()!=null)
+    }
+    if(eta.getSibling()!=null) {
       copy.setSibling(eta.getSibling().accept(this));
+    }
     copy.setType(eta.getType());
     copy.setValue(eta.getValue());
     copy.setSourceLineNumber(eta.getSourceLineNumber());
@@ -857,10 +871,12 @@ class NodeCopier{
   
   public Delta copy(Delta delta){
     Delta copy = new Delta();
-    if(delta.getChild()!=null)
+    if(delta.getChild()!=null) {
       copy.setChild(delta.getChild().accept(this));
-    if(delta.getSibling()!=null)
+    }
+    if(delta.getSibling()!=null) {
       copy.setSibling(delta.getSibling().accept(this));
+    }
     copy.setType(delta.getType());
     copy.setValue(delta.getValue());
     copy.setIndex(delta.getIndex());
@@ -883,10 +899,12 @@ class NodeCopier{
   
   public Tuple copy(Tuple tuple){
     Tuple copy = new Tuple();
-    if(tuple.getChild()!=null)
+    if(tuple.getChild()!=null) {
       copy.setChild(tuple.getChild().accept(this));
-    if(tuple.getSibling()!=null)
+    }
+    if(tuple.getSibling()!=null) {
       copy.setSibling(tuple.getSibling().accept(this));
+    }
     copy.setType(tuple.getType());
     copy.setValue(tuple.getValue());
     copy.setSourceLineNumber(tuple.getSourceLineNumber());
@@ -903,16 +921,17 @@ class Tuple extends ASTNode{
   @Override
   public String getValue(){
     ASTNode childNode = getChild();
-    if(childNode==null)
+    if(childNode==null) {
       return "nil";
+    }
     
-    String printValue = "(";
+    StringBuilder sb = new StringBuilder("(");
     while(childNode.getSibling()!=null){
-      printValue += childNode.getValue() + ", ";
+      sb.append(childNode.getValue()).append(", ");
       childNode = childNode.getSibling();
     }
-    printValue += childNode.getValue() + ")";
-    return printValue;
+    sb.append(childNode.getValue()).append(")");
+    return sb.toString();
   }
   
   public Tuple accept(NodeCopier nodeCopier){

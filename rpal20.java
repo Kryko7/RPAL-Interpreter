@@ -10,12 +10,9 @@ import rpal.AST;
 import rpal.CSEMachine;
 import rpal.ParseException;
 import rpal.Parser;
-import rpal.Scanner;
+import rpal.LexicalAnalyzer;
 
-/**
- * Main driver class.
- * @author Raj
- */
+
 public class rpal20 {
 
   public static String fileName;
@@ -118,7 +115,7 @@ public class rpal20 {
   private static AST buildAST(String fileName, boolean printOutput){
     AST ast = null;
     try{
-      Scanner scanner = new Scanner(fileName);
+      LexicalAnalyzer scanner = new LexicalAnalyzer(fileName);
       Parser parser = new Parser(scanner);
       ast = parser.buildAST();
     }catch(IOException e){
@@ -128,7 +125,7 @@ public class rpal20 {
   }
 
   private static void printAST(AST ast){
-    ast.print();
+    ast.printAST();
   }
 
   private static void printHelp(){
