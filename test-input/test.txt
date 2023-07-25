@@ -2,4 +2,4 @@ let rec reverse n m =
     (n eq 0) -> m
     | reverse (n/10) (m*10 + n - (n/10)*10)
 in
-Print(reverse 122 0)
+Print(reverse 123456789 0)
