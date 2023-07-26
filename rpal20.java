@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 
 import rpal.AST;
 import rpal.CSEMachine;
-import rpal.ParseException;
 import rpal.Parser;
 import rpal.LexicalAnalyzer;
 
