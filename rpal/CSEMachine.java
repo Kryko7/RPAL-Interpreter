@@ -18,9 +18,9 @@ public class CSEMachine{
   public CSEMachine(AST ast){
 
     if(!ast.isStandardized())
-      throw new RuntimeException("AST has NOT been standardized!"); //should never happen
+      throw new RuntimeException("AST has NOT been standardized!"); 
     rootDelta = ast.createDeltas();
-    rootDelta.setLinkedEnv(new Environment()); //primitive environment
+    rootDelta.setLinkedEnv(new Environment()); 
     valueStack = new Stack<ASTNode>();
   }
 
@@ -30,8 +30,7 @@ public class CSEMachine{
   
 
   private void processControlStack(Delta currentDelta, Environment currentEnv){
-    //create a new control stack and add all of the delta's body to it so that the delta's body isn't
-    //modified whenever the control stack is popped in all the functions below
+    
     Stack<ASTNode> controlStack = new Stack<ASTNode>();
     controlStack.addAll(currentDelta.getBody());
     
@@ -65,9 +64,7 @@ public class CSEMachine{
           valueStack.push(node);
           break;
         default:
-          // Although we use ASTNodes, a CSEM will only ever see a subset of all possible ASTNodeTypes.
-          // These are the types that are NOT standardized away into lambdas and gammas. E.g. types
-          // such as LET, WHERE, WITHIN, SIMULTDEF etc will NEVER be encountered by the CSEM
+         
           valueStack.push(node);
           break;
       }

@@ -237,8 +237,7 @@ public class AST{
   /**
    * Either creates a new child of the parent or attaches the child node passed in
    * as the last sibling of the parent's existing children 
-   * @param parentNode
-   * @param childNode
+   
    */
   private void setChild(ASTNode parentNode, ASTNode childNode){
     if(parentNode.getChild()==null)
@@ -315,8 +314,7 @@ public class AST{
       return;
     }
     else if(node.getType()==ASTNodeType.CONDITIONAL){
-      //to enable programming order evaluation, traverse the children in reverse order so the condition leads
-      // cond -> then else becomes then else Beta cond
+      
       ASTNode conditionNode = node.getChild();
       ASTNode thenNode = conditionNode.getSibling();
       ASTNode elseNode = thenNode.getSibling();
@@ -478,7 +476,7 @@ enum ASTNodeType{
   ETA(""),
   TUPLE("");
   
-  private String printName; //used for printing AST representation
+  private String printName; 
   
   private ASTNodeType(String name){
     printName = name;

@@ -54,7 +54,7 @@ public class LexicalAnalyzer{
       } else
           buffer.close();
     } catch (IOException e) {
-      // Do Nothing
+      
     }
 
     return nextChar;
@@ -171,9 +171,8 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder("");
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
-      if(nextChar.equals("\'")){ //we just used up the last char we read, hence no need to set extraCharRead
-        //sBuilder.append(nextChar);
+    while(nextChar!=null){ 
+      if(nextChar.equals("\'")){ 
         stringToken.setValue(sBuilder.toString());
         return stringToken;
       }
@@ -193,7 +192,7 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.whiteSpacePattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
@@ -215,7 +214,7 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.commentPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
