@@ -15,10 +15,12 @@ public class CSEMachine{
 
   public CSEMachine(AST ast){
 
-    if(!ast.isStandardized())
-      throw new RuntimeException("AST has NOT been standardized!"); //should never happen
+    if(!ast.isStandardized()) {
+      throw new RuntimeException("AST has NOT been standardized!");
+    }
     rootDelta = ast.createDeltas();
-    rootDelta.setLinkedEnv(new Environment()); //primitive environment
+    rootDelta.setLinkedEnv(new Environment()); 
+    //primitive environment
     valueStack = new Stack<ASTNode>();
   }
 
@@ -59,7 +61,8 @@ public class CSEMachine{
           applyGamma(currentDelta, node, currentEnv, currentControlStack);
           break;
         case DELTA:
-          ((Delta)node).setLinkedEnv(currentEnv); //RULE 2
+          ((Delta)node).setLinkedEnv(currentEnv); 
+          //RULE 2
           valueStack.push(node);
           break;
         default:
@@ -607,7 +610,7 @@ public class CSEMachine{
     System.out.print(evaluationResult);
   }
 
-  // Note how this list is different from the one defined in Scanner.java
+  // Note how this list is different from the one defined in LexicalAnalyzer.java
   private boolean isReservedIdentifier(String value){
     switch(value){
       case "Isinteger":
@@ -667,7 +670,8 @@ class Beta extends ASTNode{
 
 class Delta extends ASTNode{
   private List<String> boundVars;
-  private Environment linkedEnv; //environment in effect when this Delta was pushed on to the value stack
+  private Environment linkedEnv; 
+  //environment in effect when this Delta was pushed on to the value stack
   private Stack<ASTNode> body;
   private int index;
   

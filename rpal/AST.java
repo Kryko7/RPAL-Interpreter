@@ -193,7 +193,7 @@ public class AST{
         
         childNode = node.getChild();
         if(childNode.getType()!=ASTNodeType.EQUAL)
-          throw new StandardizingException("REC: child is not EQUAL"); //safety
+          throw new StandardizingException("REC: child is not EQUAL");
         ASTNode x = childNode.getChild();
         lambdaNode = new ASTNode();
         lambdaNode.setType(ASTNodeType.LAMBDA);
@@ -204,7 +204,8 @@ public class AST{
         gammaNode = new ASTNode();
         gammaNode.setType(ASTNodeType.GAMMA);
         gammaNode.setChild(yStarNode);
-        ASTNode xWithSiblingGamma = new ASTNode(); //same as x except the sibling is not e but gamma
+        ASTNode xWithSiblingGamma = new ASTNode(); 
+        //same as x except the sibling is not e but gamma
         xWithSiblingGamma.setChild(x.getChild());
         xWithSiblingGamma.setSibling(gammaNode);
         xWithSiblingGamma.setType(x.getType());
@@ -250,7 +251,7 @@ public class AST{
 
   private void populateCommaAndTauNode(ASTNode equalNode, ASTNode commaNode, ASTNode tauNode){
     if(equalNode.getType()!=ASTNodeType.EQUAL)
-      throw new StandardizingException("SIMULTDEF: one of the children is not EQUAL"); //safety
+      throw new StandardizingException("SIMULTDEF: one of the children is not EQUAL");
     ASTNode x = equalNode.getChild();
     ASTNode e = x.getSibling();
     setChild(commaNode, x);
@@ -322,9 +323,12 @@ public class AST{
   }
   
   private void buildDeltaBody(ASTNode node, Stack<ASTNode> body){
-    if(node.getType()==ASTNodeType.LAMBDA){ //create a new delta
-      Delta d = createDelta(node.getChild().getSibling()); //the new delta's body starts at the right child of the lambda
-      if(node.getChild().getType()==ASTNodeType.COMMA){ //the left child of the lambda is the bound variable
+    if(node.getType()==ASTNodeType.LAMBDA){ 
+      //create a new delta
+      Delta d = createDelta(node.getChild().getSibling()); 
+      //the new delta's body starts at the right child of the lambda
+      if(node.getChild().getType()==ASTNodeType.COMMA){ 
+        //the left child of the lambda is the bound variable
         ASTNode commaNode = node.getChild();
         ASTNode childNode = commaNode.getChild();
         while(childNode!=null){
@@ -334,7 +338,8 @@ public class AST{
       }
       else
         d.addBoundVars(node.getChild().getValue());
-      body.push(d); //add this new delta to the existing delta's body
+      body.push(d); 
+      //add this new delta to the existing delta's body
       return;
     }
     else if(node.getType()==ASTNodeType.CONDITIONAL){

@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-
+/*
+ * This class is responsible for reading the input file and returning the next token.
+ */
 
 public class LexicalAnalyzer{
   
@@ -67,7 +69,8 @@ public class LexicalAnalyzer{
     else if(RegExPatterns.digitPattern.matcher(currentChar).matches()){
       nextToken = buildIntegerToken(currentChar);
     }
-    else if(RegExPatterns.opSymbolPattern.matcher(currentChar).matches()){ //comment tokens are also entered from here
+    else if(RegExPatterns.opSymbolPattern.matcher(currentChar).matches()){ 
+      //comment tokens are also entered from here
       nextToken = buildOperatorToken(currentChar);
     }
     else if(currentChar.equals("\'")){
@@ -90,7 +93,8 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.identifierPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
@@ -118,7 +122,8 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.digitPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
@@ -145,8 +150,8 @@ public class LexicalAnalyzer{
     if(currentChar.equals("/") && nextChar.equals("/")) {
       return buildCommentToken(currentChar+nextChar);
     }
-    
-    while(nextChar!=null){ //null indicates the file ended
+    //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.opSymbolPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
@@ -169,13 +174,15 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder("");
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
-      if(nextChar.equals("\'")){ //we just used up the last char we read, hence no need to set extraCharRead
-        //sBuilder.append(nextChar);
+    //null indicates the file ended
+    while(nextChar!=null){ 
+      if(nextChar.equals("\'")){ 
+        //we just used up the last char we read, hence no need to set extraCharRead
         stringToken.setValue(sBuilder.toString());
         return stringToken;
       }
-      else if(RegExPatterns.stringPattern.matcher(nextChar).matches()){ //match Letter | Digit | Operator_symbol
+      else if(RegExPatterns.stringPattern.matcher(nextChar).matches()){ 
+        //match Letter | Digit | Operator_symbol
         sBuilder.append(nextChar);
         nextChar = readNextChar();
       }
@@ -191,7 +198,8 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    //null indicates the file ended
+    while(nextChar!=null){ 
       if(RegExPatterns.whiteSpacePattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
@@ -213,7 +221,8 @@ public class LexicalAnalyzer{
     StringBuilder sBuilder = new StringBuilder(currentChar);
     
     String nextChar = readNextChar();
-    while(nextChar!=null){ //null indicates the file ended
+    //null indicates the file ended
+    while(nextChar!=null){
       if(RegExPatterns.commentPattern.matcher(nextChar).matches()){
         sBuilder.append(nextChar);
         nextChar = readNextChar();
